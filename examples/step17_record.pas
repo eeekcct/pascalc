@@ -1,0 +1,14 @@
+program Step17;
+type
+  Point = record
+    x : integer;
+    y : integer;
+  end;
+var
+  p : Point;
+
+begin
+  p.x := 3;
+  p.y := 4;
+  writeln(p.x + p.y);
+end.

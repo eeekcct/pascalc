@@ -1,0 +1,4 @@
+(executable
+ (public_name pascalc)
+ (name main)
+ (libraries pascalc))
