@@ -2,7 +2,7 @@
   open Ast
 %}
 
-%token PROGRAM BEGIN END WRITELN
+%token PROGRAM BEGIN END WRITELN VAR INTEGER
 %token SEMI COLON COMMA DOT ASSIGN LPAREN RPAREN
 %token PLUS MINUS STAR SLASH
 %token <string> IDENT
@@ -16,10 +16,21 @@
 
 %%
 program:
-  | PROGRAM IDENT SEMI block DOT EOF { Program ($2, $4) }
+  | PROGRAM IDENT SEMI stmt DOT EOF { Program ($2, $4) }
 
 block:
-  | BEGIN stmt_list_opt END { Block $2 }
+  | VAR decs BEGIN stmt_list_opt END { Block ($2, $4) }
+  | BEGIN stmt_list_opt END { Block ([], $2) }
+
+ty:
+  | INTEGER { IntType }
+
+decs:
+  | dec SEMI decs { $1 :: $3 }
+  | dec SEMI { [$1] }
+
+dec:
+  | IDENT COLON ty { VarDec ($3, $1) }
 
 stmt_list_opt:
   | { [] }

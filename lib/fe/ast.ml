@@ -1,6 +1,14 @@
+type id = string
+
 type binop =
   | Add | Sub | Mul | Div
   | Eq | Gt
+
+type typ = 
+  | IntType
+
+type dec =
+  | VarDec of typ * id
 
 type expr = 
   | Int of int
@@ -12,7 +20,7 @@ type expr =
 type stmt =
   | Assign of string * expr
   | Writeln of expr
-  | Block of stmt list
+  | Block of dec list * stmt list
 
 type program =
   Program of string * stmt

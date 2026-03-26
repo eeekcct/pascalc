@@ -20,8 +20,12 @@ let rec eval_stmt env = function
       Hashtbl.replace env x v
   | Writeln e ->
       Printf.printf "%d\n" (eval_expr env e)
-  | Block stmts ->
-      List.iter (eval_stmt env) stmts
+  | Block (decs, stmts) ->
+    List.iter(fun dec ->
+      match dec with
+      | VarDec (IntType, id) -> Hashtbl.add env id 0
+    ) decs;
+    List.iter (eval_stmt env) stmts
 
 let run = function
   | Program (name, stmt) ->

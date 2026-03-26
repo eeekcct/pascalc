@@ -14,6 +14,8 @@ rule token = parse
   | "begin" { BEGIN }
   | "end" { END }
   | "writeln" { WRITELN }
+  | "var" { VAR }
+  | "integer" { INTEGER }
   | ":=" { ASSIGN }
   | ';' { SEMI }
   | ':' { COLON }
