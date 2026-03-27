@@ -16,6 +16,9 @@ rule token = parse
   | "writeln" { WRITELN }
   | "var" { VAR }
   | "integer" { INTEGER }
+  | "if" { IF }
+  | "then" { THEN }
+  | "else" { ELSE }
   | ":=" { ASSIGN }
   | ';' { SEMI }
   | ':' { COLON }
@@ -24,6 +27,12 @@ rule token = parse
   | '-' { MINUS }
   | '*' { STAR }
   | '/' { SLASH }
+  | '=' { EQ }
+  | "<>" { NEQ }
+  | '>' { GT }
+  | '<' { LT }
+  | ">=" { GE }
+  | "<=" { LE }
   | '(' { LPAREN }
   | ')' { RPAREN }
   | ',' { COMMA }

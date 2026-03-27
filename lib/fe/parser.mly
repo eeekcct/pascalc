@@ -2,8 +2,8 @@
   open Ast
 %}
 
-%token PROGRAM BEGIN END WRITELN VAR INTEGER
-%token SEMI COLON COMMA DOT ASSIGN LPAREN RPAREN
+%token PROGRAM BEGIN END WRITELN VAR INTEGER IF THEN ELSE
+%token SEMI COLON COMMA DOT ASSIGN LPAREN RPAREN EQ NEQ GT LT GE LE
 %token PLUS MINUS STAR SLASH
 %token <string> IDENT
 %token <int> INT
@@ -13,6 +13,8 @@
 
 // %left PLUS MINUS
 // %left STAR SLASH
+%nonassoc THEN
+%nonassoc ELSE
 
 %%
 program:
@@ -45,6 +47,16 @@ stmt:
   | IDENT ASSIGN expr { Assign ($1, $3) }
   | WRITELN LPAREN expr RPAREN { Writeln $3 }
   | block { $1 }
+  | IF cond THEN stmt %prec THEN { If ($2, $4, None) }
+  | IF cond THEN stmt ELSE stmt { If ($2, $4, Some $6) }
+
+cond:
+  | expr EQ expr { Binop (Eq, $1, $3) }
+  | expr NEQ expr { Binop (Neq, $1, $3) }
+  | expr GT expr { Binop (Gt, $1, $3) }
+  | expr GE expr { Binop (Ge, $1, $3) }
+  | expr LT expr { Binop (Lt, $1, $3) }
+  | expr LE expr { Binop (Le, $1, $3) }
 
 expr:
   | term { $1 }
@@ -52,9 +64,13 @@ expr:
   | expr MINUS term { Binop (Sub,$1, $3) }
 
 term:
+  | unary { $1 } 
+  | term STAR unary { Binop (Mul,$1, $3) }
+  | term SLASH unary { Binop (Div,$1, $3) }
+
+unary:
   | factor { $1 }
-  | term STAR factor { Binop (Mul,$1, $3) }
-  | term SLASH factor { Binop (Div,$1, $3) }
+  | MINUS unary { Unop (Neg, $2) }
 
 factor:
   | INT { Int $1 }

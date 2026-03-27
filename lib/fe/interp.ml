@@ -12,6 +12,13 @@ let rec eval_expr env = function
       let v2 = eval_expr env e2 in
       if v2 = 0 then raise (Runtime_error "Division by zero")
       else eval_expr env e1 / v2
+  | Binop (Eq, e1, e2) -> if eval_expr env e1 = eval_expr env e2 then 1 else 0
+  | Binop (Neq, e1, e2) -> if eval_expr env e1 <> eval_expr env e2 then 1 else 0
+  | Binop (Gt, e1, e2) -> if eval_expr env e1 > eval_expr env e2 then 1 else 0
+  | Binop (Lt, e1, e2) -> if eval_expr env e1 < eval_expr env e2 then 1 else 0
+  | Binop (Ge, e1, e2) -> if eval_expr env e1 >= eval_expr env e2 then 1 else 0
+  | Binop (Le, e1, e2) -> if eval_expr env e1 <= eval_expr env e2 then 1 else 0
+  | Unop (Neg, e) -> - (eval_expr env e)
   | _ -> failwith "Unsupported expression"
 
 let rec eval_stmt env = function
@@ -26,6 +33,11 @@ let rec eval_stmt env = function
       | VarDec (IntType, id) -> Hashtbl.add env id 0
     ) decs;
     List.iter (eval_stmt env) stmts
+  | If (cond, then_stmt, else_stmt) ->
+      if eval_expr env cond <> 0 then eval_stmt env then_stmt
+      else (match else_stmt with
+            | Some stmt -> eval_stmt env stmt
+            | None -> ())
 
 let run = function
   | Program (name, stmt) ->
