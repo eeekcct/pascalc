@@ -19,6 +19,8 @@ rule token = parse
   | "if" { IF }
   | "then" { THEN }
   | "else" { ELSE }
+  | "while" { WHILE }
+  | "do" { DO }
   | ":=" { ASSIGN }
   | ';' { SEMI }
   | ':' { COLON }

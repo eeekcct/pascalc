@@ -2,7 +2,7 @@
   open Ast
 %}
 
-%token PROGRAM BEGIN END WRITELN VAR INTEGER IF THEN ELSE
+%token PROGRAM BEGIN END WRITELN VAR INTEGER IF THEN ELSE WHILE DO
 %token SEMI COLON COMMA DOT ASSIGN LPAREN RPAREN EQ NEQ GT LT GE LE
 %token PLUS MINUS STAR SLASH
 %token <string> IDENT
@@ -49,6 +49,7 @@ stmt:
   | IF cond THEN stmt %prec THEN { If ($2, $4, None) }
   | IF cond THEN stmt ELSE stmt { If ($2, $4, Some $6) }
   | BEGIN stmt_list_opt END { Compound $2 }
+  | WHILE cond DO stmt { While ($2, $4) }
 
 cond:
   | expr EQ expr { Binop (Eq, $1, $3) }

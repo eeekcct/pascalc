@@ -26,6 +26,7 @@ type stmt =
   | Writeln of expr
   | If of expr * stmt * (stmt option)
   | Compound of stmt list
+  | While of expr * stmt
 
 type block =
   | Block of dec list * stmt

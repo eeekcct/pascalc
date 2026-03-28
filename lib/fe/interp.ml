@@ -34,6 +34,10 @@ let rec eval_stmt env = function
             | None -> ())
   | Compound stmts ->
       List.iter (eval_stmt env) stmts
+  | While (cond, body) ->
+      while eval_expr env cond <> 0 do
+        eval_stmt env body
+      done
 
 let rec eval_block env (Block (decs, stmt)) =
   List.iter(fun dec ->
