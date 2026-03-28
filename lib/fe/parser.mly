@@ -2,7 +2,7 @@
   open Ast
 %}
 
-%token PROGRAM BEGIN END WRITELN VAR INTEGER IF THEN ELSE WHILE DO
+%token PROGRAM BEGIN END WRITELN VAR INTEGER BOOLEAN IF THEN ELSE WHILE DO
 %token SEMI COLON COMMA DOT ASSIGN LPAREN RPAREN EQ NEQ GT LT GE LE
 %token PLUS MINUS STAR SLASH
 %token <string> IDENT
@@ -26,6 +26,7 @@ block:
 
 ty:
   | INTEGER { IntType }
+  | BOOLEAN { BoolType }
 
 decs:
   | dec SEMI decs { $1 :: $3 }
@@ -44,7 +45,7 @@ stmt_list:
   | stmt_list SEMI stmt { $3 :: $1 }
 
 stmt:
-  | IDENT ASSIGN expr { Assign ($1, $3) }
+  | IDENT ASSIGN cond { Assign ($1, $3) }
   | WRITELN LPAREN expr RPAREN { Writeln $3 }
   | IF cond THEN stmt %prec THEN { If ($2, $4, None) }
   | IF cond THEN stmt ELSE stmt { If ($2, $4, Some $6) }
@@ -58,6 +59,7 @@ cond:
   | expr GE expr { Binop (Ge, $1, $3) }
   | expr LT expr { Binop (Lt, $1, $3) }
   | expr LE expr { Binop (Le, $1, $3) }
+  | expr { $1 }
 
 expr:
   | term { $1 }

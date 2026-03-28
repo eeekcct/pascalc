@@ -4,6 +4,7 @@ exception Runtime_error of string
 
 let rec eval_expr env = function
   | Int n -> n
+  | Bool b -> if b then 1 else 0
   | Var x -> Hashtbl.find env x
   | Binop (Add, e1, e2) -> eval_expr env e1 + eval_expr env e2
   | Binop (Sub, e1, e2) -> eval_expr env e1 - eval_expr env e2
@@ -43,6 +44,7 @@ let rec eval_block env (Block (decs, stmt)) =
   List.iter(fun dec ->
     match dec with
     | VarDec (IntType, id) -> Hashtbl.add env id 0
+    | VarDec (BoolType, id) -> Hashtbl.add env id 0
   ) decs;
   eval_stmt env stmt
 

@@ -7,4 +7,9 @@ begin
     writeln(1)
   else
     writeln(0);
+  b := 5 < 3;
+  if b then
+    writeln(1)
+  else
+    writeln(0);
 end.

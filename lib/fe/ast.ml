@@ -9,6 +9,7 @@ type unop =
 
 type typ = 
   | IntType
+  | BoolType
 
 type dec =
   | VarDec of typ * id

@@ -16,6 +16,7 @@ rule token = parse
   | "writeln" { WRITELN }
   | "var" { VAR }
   | "integer" { INTEGER }
+  | "boolean" { BOOLEAN }
   | "if" { IF }
   | "then" { THEN }
   | "else" { ELSE }
