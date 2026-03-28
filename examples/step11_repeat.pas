@@ -1,4 +1,4 @@
-program Step11
+program Step11;
 var
   i : integer;
 begin

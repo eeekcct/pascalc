@@ -27,19 +27,22 @@ let rec eval_stmt env = function
       Hashtbl.replace env x v
   | Writeln e ->
       Printf.printf "%d\n" (eval_expr env e)
-  | Block (decs, stmts) ->
-    List.iter(fun dec ->
-      match dec with
-      | VarDec (IntType, id) -> Hashtbl.add env id 0
-    ) decs;
-    List.iter (eval_stmt env) stmts
   | If (cond, then_stmt, else_stmt) ->
       if eval_expr env cond <> 0 then eval_stmt env then_stmt
       else (match else_stmt with
             | Some stmt -> eval_stmt env stmt
             | None -> ())
+  | Compound stmts ->
+      List.iter (eval_stmt env) stmts
+
+let rec eval_block env (Block (decs, stmt)) =
+  List.iter(fun dec ->
+    match dec with
+    | VarDec (IntType, id) -> Hashtbl.add env id 0
+  ) decs;
+  eval_stmt env stmt
 
 let run = function
-  | Program (name, stmt) ->
+  | Program (name, block) ->
       let env = Hashtbl.create 16 in
-      eval_stmt env stmt
+      eval_block env block

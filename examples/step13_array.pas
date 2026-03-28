@@ -1,4 +1,4 @@
-program Step13
+program Step13;
 var
   a : array[1..3] of integer;
 begin

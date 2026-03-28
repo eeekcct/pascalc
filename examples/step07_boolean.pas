@@ -1,4 +1,4 @@
-program Step08
+program Step07;
 var
   b : boolean;
 begin

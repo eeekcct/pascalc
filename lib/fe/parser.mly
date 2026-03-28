@@ -18,11 +18,11 @@
 
 %%
 program:
-  | PROGRAM IDENT SEMI stmt DOT EOF { Program ($2, $4) }
+  | PROGRAM IDENT SEMI block DOT EOF { Program ($2, $4) }
 
 block:
-  | VAR decs BEGIN stmt_list_opt END { Block ($2, $4) }
-  | BEGIN stmt_list_opt END { Block ([], $2) }
+  | VAR decs BEGIN stmt_list_opt END { Block ($2, Compound $4) }
+  | BEGIN stmt_list_opt END { Block ([], Compound $2) }
 
 ty:
   | INTEGER { IntType }
@@ -37,18 +37,18 @@ dec:
 stmt_list_opt:
   | { [] }
   | stmt_list { List.rev $1 }
+  | stmt_list SEMI { List.rev $1 }
 
 stmt_list:
   | stmt { [$1] }
   | stmt_list SEMI stmt { $3 :: $1 }
-  | stmt_list SEMI { $1 }
 
 stmt:
   | IDENT ASSIGN expr { Assign ($1, $3) }
   | WRITELN LPAREN expr RPAREN { Writeln $3 }
-  | block { $1 }
   | IF cond THEN stmt %prec THEN { If ($2, $4, None) }
   | IF cond THEN stmt ELSE stmt { If ($2, $4, Some $6) }
+  | BEGIN stmt_list_opt END { Compound $2 }
 
 cond:
   | expr EQ expr { Binop (Eq, $1, $3) }

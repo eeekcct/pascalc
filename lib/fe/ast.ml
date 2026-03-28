@@ -24,8 +24,11 @@ type expr =
 type stmt =
   | Assign of string * expr
   | Writeln of expr
-  | Block of dec list * stmt list
   | If of expr * stmt * (stmt option)
+  | Compound of stmt list
+
+type block =
+  | Block of dec list * stmt
 
 type program =
-  Program of string * stmt
+  Program of string * block
